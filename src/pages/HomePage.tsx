@@ -14,12 +14,14 @@ import { IconTrash } from "@tabler/icons-react";
 import { LoremIpsum } from "lorem-ipsum";
 import { randomId } from "@mantine/hooks";
 import { v4 as uuidv4 } from "uuid";
+
 interface Task {
   id: string;
   title: string;
   description: string;
   isDone: boolean;
   dueDate: Date | null;
+  doneDate: Date | null;
 }
 
 export default function HomePage() {
@@ -30,6 +32,7 @@ export default function HomePage() {
       description: "Vite + React + Mantine + TS",
       isDone: false,
       dueDate: new Date(),
+      doneDate: new Date(),
     },
     {
       id: "2",
@@ -37,6 +40,7 @@ export default function HomePage() {
       description: "Finish project for class",
       isDone: false,
       dueDate: new Date(),
+      doneDate: new Date(),
     },
     {
       id: "3",
@@ -44,6 +48,7 @@ export default function HomePage() {
       description: "Push project to GitHub Pages",
       isDone: false,
       dueDate: new Date(),
+      doneDate: new Date(),
     },
   ]);
   const lorem = new LoremIpsum({
@@ -64,6 +69,7 @@ export default function HomePage() {
       description: lorem.generateWords(10),
       isDone: false,
       dueDate: new Date(),
+      doneDate: null,
     };
     setTasks((prev) => [...prev, newTask]);
   };
@@ -76,7 +82,8 @@ export default function HomePage() {
   // Toggle done
   const toggleDoneTask = (taskId: string) => {
     setTasks((prev) =>
-      prev.map((t) => (t.id === taskId ? { ...t, isDone: !t.isDone } : t))
+      prev.map((t) => (t.id === taskId ? { ...t, isDone: !t.isDone, doneDate: new Date() } : t))
+
     );
   };
 
@@ -88,7 +95,7 @@ export default function HomePage() {
           All : {tasks.length} | Done : {tasks.filter((t) => t.isDone).length}
         </Text>
         {/* เพิ่ม Task */}
-        <Button onClick={handleAdd}>Add Task</Button>
+        <Button color="cyan" c="white" onClick={handleAdd}>Add Task</Button>
         {/* แสดง Task Cards */}
         <Stack w="100%">
           {tasks.map((task) => (
@@ -112,13 +119,15 @@ export default function HomePage() {
                     </Text>
                   )}
                   {/* แสดง Date & Time */}
-                  <Text size="xs" c="gray">
-                    Done at:
+                  {task.doneDate && task.isDone && (
+                  <Text size="xs" c="worapop">
+                    Done at: {task.doneDate.toLocaleDateString()}
                   </Text>
+                  )}
                 </Stack>
                 {/* แสดง Button Done & Button Delete */}
                 <Group>
-                  <Button
+                  {/* <Button
                     style={{
                       backgroundColor: "#71c32fda",
                       color: "#dce6e7ff",
@@ -128,15 +137,21 @@ export default function HomePage() {
                     onClick={() => toggleDoneTask(task.id)}
                   >
                     Done
-                  </Button>
-                  <Button
-                    color="chanadda"
-                    variant="light"
+                  </Button> */}
+                  <Checkbox
+                    defaultChecked
+                    label="Done"
+                    color="cyan"
+                    checked={task.isDone}
+                    onChange={() => toggleDoneTask(task.id)}
+                  />
+                  <ActionIcon
+                    color="red"
                     size="xs"
                     onClick={() => deleteTask(task.id)}
                   >
-                    Delete
-                  </Button>
+                    <IconTrash size={20} />
+                  </ActionIcon>
                 </Group>
               </Group>
             </Card>
