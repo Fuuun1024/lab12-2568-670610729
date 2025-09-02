@@ -121,7 +121,7 @@ export default function HomePage() {
                   {/* แสดง Date & Time */}
                   {task.doneDate && task.isDone && (
                   <Text size="xs" c="worapop">
-                    Done at: {task.doneDate.toLocaleDateString()}
+                    Done at: {task.doneDate.toLocaleDateString() + ", " + task.doneDate.toLocaleTimeString() }
                   </Text>
                   )}
                 </Stack>
@@ -147,6 +147,7 @@ export default function HomePage() {
                   />
                   <ActionIcon
                     color="red"
+                    variant="light"
                     size="xs"
                     onClick={() => deleteTask(task.id)}
                   >
